@@ -1,0 +1,5 @@
+To run the file with mininet, simply type:
+
+sudo python -tt topo.py
+
+Then follow the on screen instructions to create the approriate topologies and run the appropriate tests.
