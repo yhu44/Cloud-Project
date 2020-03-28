@@ -19,6 +19,8 @@ import random
 
 class JellyfishTopology(Topo):
 
+    #Adds one connection to another of the p random core switch
+    #The remaing p-1 ports are reserved for edge switches
     def connectCoreSwitches(self, linkopts1):
         for switch in self.coreSwitches:
             while (len(self.countUsedPorts[switch]) == 0):
@@ -29,7 +31,9 @@ class JellyfishTopology(Topo):
                     self.countUsedPorts[switch].append(randomSwitch)
                     self.countUsedPorts[randomSwitch].append(switch)
 
-
+    #Connects each of the edge switches to a random core swith as long its not occupied
+    #Then conneccts the remaining p - 2 ports to random edge switches as long as its not occupied
+    #Then connects a host to the remaing port
     def connectEdgeSwitchesToHosts(self, linkopts2, linkopts3):
         for switch in self.edgeSwitches:
             while (len(self.countUsedPorts[switch]) < self.numPorts - 1):
@@ -59,6 +63,7 @@ class JellyfishTopology(Topo):
         self.countUsedPorts = {}
         self.countHosts = 0
 
+        #creates p core switches
         countCores = (self.numPorts/2)**2
         for i in irange(1,countCores):
             self.countSwitch += 1
@@ -66,8 +71,10 @@ class JellyfishTopology(Topo):
             self.coreSwitches.append(coreSwitch)
             self.countUsedPorts[coreSwitch] = []
 
+        #connects the core switches together
         self.connectCoreSwitches(linkopts1)
 
+        #creates p^2 edge switches to be randomly assigned to core switches
         countEdges = countCores**2
         for i in irange(1,countEdges):
             self.countSwitch += 1
@@ -75,8 +82,18 @@ class JellyfishTopology(Topo):
             self.edgeSwitches.append(edgeSwitch)
             self.countUsedPorts[edgeSwitch] = []
 
+        #connects the edge switches to cores and other edge switches
+        #connects the hosts to edge switches
         self.connectEdgeSwitchesToHosts(linkopts2, linkopts3)
 
+        print("\n---------------------%s-port Jellyfish  ---------------" % self.numPorts )
+        print("number of ports per switch                : %s" % self.numPorts)             
+        print("total number of switches                  : %s" % self.countSwitch)                                   
+        print("  - number of core switches               : %s" % len(self.coreSwitches))                            
+        print("  - number of edge switches               : %s" % len(self.edgeSwitches))                               
+        print("total number of hosts                     : %s" % self.countHosts)
+        print("number of links                           : %s" % self.countEdges)   
+        print("-----------------------------------------------------")
     
 
 # Creates Simple Tree Topology
