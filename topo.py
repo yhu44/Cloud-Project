@@ -87,22 +87,22 @@ class JellyfishTopology(Topo):
         self.connectEdgeSwitchesToHosts(linkopts2, linkopts3)
 
         print("\n---------------------%s-port Jellyfish  ---------------" % self.numPorts )
-        print("number of ports per switch                : %s" % self.numPorts)             
-        print("total number of switches                  : %s" % self.countSwitch)                                   
-        print("  - number of core switches               : %s" % len(self.coreSwitches))                            
-        print("  - number of edge switches               : %s" % len(self.edgeSwitches))                               
+        print("number of ports per switch                : %s" % self.numPorts)
+        print("total number of switches                  : %s" % self.countSwitch)
+        print("  - number of core switches               : %s" % len(self.coreSwitches))
+        print("  - number of edge switches               : %s" % len(self.edgeSwitches))
         print("total number of hosts                     : %s" % self.countHosts)
-        print("number of links                           : %s" % self.countEdges)   
+        print("number of links                           : %s" % self.countEdges)
         print("-----------------------------------------------------")
-    
+
 
 # Creates Simple Tree Topology
 class SimpleTreeTopology(Topo):
     def __init__(self,linkopts1,linkopts2,linkopts3,k=2, **opts):
-        
-        #linkopts1 = performance parameters for the links between core and aggregation switches
-        #linkopts2 = performance parameters for the links between aggregation and edge switches
-        #linkopts3 = performance parameters for the links between edge switches and host
+
+       #linkopts1 = performance parameters for the links between core and aggregation switches
+       #linkopts2 = performance parameters for the links between aggregation and edge switches
+       #linkopts3 = performance parameters for the links between edge switches and host
 
         super(SimpleTreeTopology, self).__init__(**opts)
         self.fanout = k
@@ -120,10 +120,10 @@ class SimpleTreeTopology(Topo):
         for i in irange(1,k):
             countS = countS + 1
             aggregationSwitch = self.addSwitch("s%s" % (countS))
-            self.numAgg +=1 
+            self.numAgg +=1
             self.addLink(aggregationSwitch,coreSwitch,**linkopts1)
-            self.aggCoreConn +=1 
-            
+            self.aggCoreConn +=1
+
             #Adds Edge Switches and links them to Aggregation Switches
             for j in irange(1,k):
                 countS = countS + 1
@@ -131,7 +131,7 @@ class SimpleTreeTopology(Topo):
                 self.numEdge += 1
                 self.addLink(edgeSwitch,aggregationSwitch,**linkopts2)
                 self.edgeAggConn +=1
-                
+
                 #Adds Hosts and links them to Edge Switches
                 for n in irange(1,k):
                     countH = countH + 1
@@ -140,111 +140,93 @@ class SimpleTreeTopology(Topo):
                     self.edgeHostConn += 1
 
         print("\n---------------------%s-ary simple tree  ---------------" % self.fanout )
-        print("edge switch-host connections              : %s" % self.edgeHostConn)                
-        print("edge switch-aggregation switch connections: %s" % self.edgeAggConn)                      
-        print("aggregation switch-core switch connections: %s" % self.aggCoreConn)  
+        print("edge switch-host connections              : %s" % self.edgeHostConn)
+        print("edge switch-aggregation switch connections: %s" % self.edgeAggConn)
+        print("aggregation switch-core switch connections: %s" % self.aggCoreConn)
         print("number of edge switches                   : %s" % self.numEdge)
-        print("number of aggregation switches            : %s" % self.numAgg)                         
-        print("number of core switches                   : 1")        
+        print("number of aggregation switches            : %s" % self.numAgg)
+        print("number of core switches                   : 1")
         print("total number of hosts                     : %s" % countH)
         print("-----------------------------------------------------")
 
+class Pod(object):
+    def __init__(self):
+        self.layers = [[],[]] #layer 1= agg switches, layer 2 = edge switches
+
+
 #Creates Fat Tree Topology
+#linkopts1 = core and aggregation switches link parameters
+#linkopts2 = aggregation and edge switches link parameters
+#linkopts3 = edge switches and host link parameters
 class FatTreeTopology(Topo):
 
     def __init__(self,linkopts1,linkopts2,linkopts3,k=2, **opts):
 
-      #linkopts1 = performance parameters for the links between core and aggregation switches
-      #linkopts2 = performance parameters for the links between aggregation and edge switches
-      #linkopts3 = performance parameters for the links between edge switches and host
-
         super(FatTreeTopology, self).__init__(**opts)
-        self.fanout = k
+        self.k = k
         self.pods = []
         self.cores = []
         self.countHosts = 0
         self.countSwitch = 0
         self.hostForPod = 0
-        self.switchPerLayer = (self.fanout/2)
-        self.edgeHostConn = 0 
-        self.edgeAggConn = 0 
-        self.aggCoreConn = 0 
-        self.numCores = 0 
-        
+        self.numCores = 0
+        self.numSwitchesPerPod = self.k/2
 
         #Creates Core Switches
-        countCores = (self.fanout/2)**2
-        for i in irange(1,countCores):
+        for i in irange(1, self.numSwitchesPerPod**2):
             self.countSwitch += 1
             coreSwitch = self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone')
             self.cores.append(coreSwitch)
-            self.numCores+=1  
+            self.numCores+=1
 
         #Creates Pods + Hosts
-        for i in irange(1,self.fanout):
+        for i in irange(1,self.k):
             self.pods.append(self.createPod(i,linkopts2,linkopts3))
 
-
         #Links Core Switches to Pods
-        count = 0  #Core switch Position
-        for i in self.cores:
-            for j in self.pods:
-                if count < (self.fanout/2):
-                    self.addLink(j.layers[0][((self.fanout/2)/2)-1],i,**linkopts1)  
+        coreSwitchPos = 0
+        for core in self.cores:
+            for pod in self.pods:
+                if coreSwitchPos < self.numSwitchesPerPod:
+                    self.addLink(j.layers[0][(self.numSwitchesPerPod/2)-1],core,**linkopts1)
                 else:
-                    self.addLink(j.layers[0][((self.fanout/2)/2)],i,**linkopts1)  
-                self.aggCoreConn +=1 
-            count += 1 
+                    self.addLink(pod.layers[0][self.numSwitchesPerPod/2],core,**linkopts1)
+            coreSwitchPos += 1
 
-        self.corePodConn = self.numCores * k
-
-        print("\n---------------------%s-ary fat tree  ---------------" % self.fanout )
-        print("number of pods                            : %s" % self.fanout)
+        print("\n---------------------%s-ary fat tree  ---------------" % self.k )
+        print("number of pods                            : %s" % self.k)
         print("hosts per pod                             : %s" % self.hostForPod)
-        print("number of switches per layer in pod       : %s" % self.switchPerLayer)
-        print("number of switch ports in pod             : %s" % self.fanout)                
-        print("edge switch-host connections              : %s" % self.edgeHostConn)                
-        print("edge switch-aggregation switch connections: %s" % self.edgeAggConn)                      
-        print("aggregation switch-core switch connections: %s" % self.aggCoreConn)                            
-        print("number of core switches                   : %s" % self.numCores)        
-        print("number of pods core switches connect to   : %s" % self.corePodConn)                        
+        print("number of switch ports in pod             : %s" % self.k)
+        print("number of core switches                   : %s" % self.numCores)
         print("total number of hosts                     : %s" % self.countHosts)
         print("-----------------------------------------------------")
 
     #Function for Creating Pods
     def createPod(self, index,linkopts2,linkopts3):
         pod = Pod()
-        numberOfSwitches = (self.fanout/2)
         self.hostForPod = 0
 
-        # Adds aggregation and edge switches
-        for i in irange(1,numberOfSwitches):
+        for i in irange(1,self.k/2): #for number of switches in pod
+           #Add agg switches
            self.countSwitch += 1
-           aggSwitch = self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone')
-           pod.layers[0].append(aggSwitch)
+           pod.layers[0].append(self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone'))
 
+           #Add edge switches
            self.countSwitch += 1
            edgeSwitch = self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone')
            pod.layers[1].append(edgeSwitch)
-           for j in irange(1,self.fanout/2):
+
+           #add hosts
+           for j in irange(1,self.k/2):
                 self.countHosts +=1
-                host = self.addHost("h%s" % (self.countHosts))
-                self.addLink(host,edgeSwitch,**linkopts3)  
-                self.edgeHostConn += 1
+                self.addLink(self.addHost("h%s" % (self.countHosts)),edgeSwitch,**linkopts3)
                 self.hostForPod += 1
 
-        for i in pod.layers[0]: # For each aggregation switch, adds a link between itself and an edge switch  // [0] agg [1] edge
+        for i in pod.layers[0]: # Add link btw each agg switch (0) and an edge switch (1)
            for j in pod.layers[1]:
                 self.addLink(j,i,**linkopts2)
-                self.edgeAggConn += 1
-        
-        return pod
 
-# Pod Object with attribute layers
-# On first position are the aggregation switches, and on the second the edge switches
-class Pod(object):
-    def __init__(self):
-        self.layers = [[],[]]
+        return pod
 
 # Creates a Simple Tree Topology
 def startSimpleTreeTopology(fanout=2,linkopts1 = {'bw':20},linkopts2 = {'bw':1},linkopts3 = {'bw':10}):
@@ -255,14 +237,14 @@ def startSimpleTreeTopology(fanout=2,linkopts1 = {'bw':20},linkopts2 = {'bw':1},
     return net
 
 # Creates a Fat Tree Topology
-def startFatTreeTopology(fanout=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10},linkopts3 = {'bw':10}):
-    topo = FatTreeTopology(linkopts1,linkopts2,linkopts3,k=fanout)
+def startFatTreeTopology(k=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10},linkopts3 = {'bw':10}):
+    topo = FatTreeTopology(linkopts1,linkopts2,linkopts3,k=k)
     net = Mininet(topo,link=TCLink)
     net.start()
     print("Loading Spanning Tree Protocol...")
     # For each switch, enables stp
     for switch in net.switches:
-        os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name) 
+        os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name)
     time.sleep(len(net.switches)*2) # Waits until all switches are enabled
   #  CLI(net)
     return net
@@ -274,7 +256,7 @@ def startJellyfishTopology(ports=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10}, 
     print("Loading Spanning Tree Protocol...")
     # For each switch, enables stp
     for switch in net.switches:
-        os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name) 
+        os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name)
     time.sleep(len(net.switches)*2) # Waits until all switches are enabled
   #  CLI(net)
     return net
@@ -293,7 +275,7 @@ def getMinParamBetweenHosts(net, hostSrc,hostDst,param):
             minValue = link.intf1.params[param]
             break
 
-    # Goes trough the tree from the leafs to the root, compares the values, 
+    # Goes trough the tree from the leafs to the root, compares the values,
     # and returns the minimum value for the given parameter
     while(True):
         for link in net.links:
@@ -303,7 +285,7 @@ def getMinParamBetweenHosts(net, hostSrc,hostDst,param):
                     minValue = link.intf1.params[param]
                 nameNode1 = link.intf2.name.split("-")[0]
                 break
-  
+
         for link2 in net.links:
             if(link2.intf1.name.split("-")[0] == nameNode2):
                 if minValue > link2.intf1.params[param]:
@@ -320,7 +302,7 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
     nameNode1 = hostSrc
     nameNode2 = hostDst
     param = 'delay'
-    
+
     srcToDst = (nameNode1+"-")
     dstToSrc = nameNode2
 
@@ -335,7 +317,7 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
                 nameNode1 = link.intf2.name.split("-")[0]
                 srcToDst += (nameNode1+"-")
                 break
-  
+
         for link2 in net.links:
             if(link2.intf1.name.split("-")[0] == nameNode2):
                 result['sumDelays'] +=  int(link.intf1.params[param].split("ms")[0])
@@ -377,7 +359,7 @@ def explanationIperf(optionMenu):
     print "specific connection can be obtained by looking at all these links, comparing their"
     print "respective connection speeds, and then selecting the minimum value among them.\n"
 
-    
+
 def explanationPing(net,src,dst,link1,link2,link3):
     pathAndDelay = getPathAndDelayBetweenHosts(net,src,dst)
     print "\n\n###########################"
@@ -385,7 +367,7 @@ def explanationPing(net,src,dst,link1,link2,link3):
     print "###########################\n"
     print "\nAs observed, the value for the first Ping is higher than expected."
     print "This happens because the switch as to first go to the controller in order"
-    print "to get the desired route.\n" 
+    print "to get the desired route.\n"
     print ("\nDELAYS:\n\tCore <-> Aggregation = %s \n\tAggregation <-> Edge = %s\n\tEdge <-> Host        = %s" % (link1['delay'],link2['delay'],link3['delay']))
     print ("\nThe path between %s and %s is [%s] (round trip)" % (src,dst,pathAndDelay['path']))
     print "Then, and since the delay for each link above, the expected time for"
@@ -395,26 +377,26 @@ def explanationPingLoss():
     print "\n\n###########################"
     print "####### Explanation #######"
     print "###########################\n"
-    print "5 packets are sent assuming 10% loss in which one of them.\nSo, 5*10% = 50%, which means that half a packet is loss.\nSince once a packet is corrupted, it is therefore discarted, a whole packet is lost." 
+    print "5 packets are sent assuming 10% loss in which one of them.\nSo, 5*10% = 50%, which means that half a packet is loss.\nSince once a packet is corrupted, it is therefore discarted, a whole packet is lost."
     print("Based of following formula: \n\tnumber packets lost / number packets trasmitted\n4we have 1 packet lost / 5 packets trasmitted = 20% packet loss -> minimum expected packet loss value.")
     print "Anything higher than this value, are due to possible network issues."
- 
+
 def testPing(net,node1,node2):
     print "\n\n#############################################"
-    print "######## Pinging between %s and %s ##########" % (node1,node2) 
+    print "######## Pinging between %s and %s ##########" % (node1,node2)
     print "#############################################\n"
 
     popens = {}
     srcH,dstH = net.get(node1, node2)
 
     numberOfPings = 5
-   
+
     popens[ dstH ] = srcH.popen("ping -c5 %s" % dstH.IP())
     aux = 1
     for h, line in pmonitor(popens):
         if(h):
             print line,
-          
+
 
 #Main Function
 def run():
@@ -433,7 +415,7 @@ def run():
         print " 3 - Jellyfish Topology"
         print " 4 - Exit Program\n"
         mainOption = input('Please select an option from the menu: ')
-        
+
         if(mainOption == 4):
              exit = True
 
@@ -453,7 +435,7 @@ def run():
             print "######################################\n"
 
             inputSimpleFanout = input('Please enter the desired fanout: ')
-            
+
             while(not simpleGoBack):
 
                 print "\n######################################"
@@ -469,13 +451,13 @@ def run():
                 print " 2 - Run Topology Tests"
                 print " 3 - Go Back\n"
                 inputSimpleOption = input('Please enter the desired option: ')
-                
+
                 if(inputSimpleOption == 3):
                     cleanup()
                     createdTopo = False
                     simpleGoBack = True
-                
-                if(inputSimpleOption == 1): 
+
+                if(inputSimpleOption == 1):
                     if(createdTopo):
                         print "\nTopology already created!\n"
                     else:
@@ -486,10 +468,15 @@ def run():
                            CLI(net)
                         if(mainOption == 2 ):
                            net = startFatTreeTopology(inputSimpleFanout)
+<<<<<<< HEAD
                            CLI(net)
                         if(mainOption == 3 ):
                            net = startJellyfishTopology(inputSimpleFanout)
                            CLI(net)
+=======
+                        if(mainOption == 3 ):
+                           net = startJellyfishTopology(inputSimpleFanout)
+>>>>>>> 34b7ea5a700b5c2fa08baa8eaf02efa50f608ca1
                         createdTopo = True
                 if(inputSimpleOption == 2):
                     simpleTestGoBack = False
@@ -515,7 +502,7 @@ def run():
                             simpleTestGoBack = True
 
                         if(inputSimpleTestOption == 1):
-                            
+
                             print "\n##############################################"
                             print "############# Running iPerf Test ##############"
                             print "###############################################\n"
@@ -527,27 +514,27 @@ def run():
                                 if(mainOption == 3 ):
                                     net = startJellyfishTopology(inputSimpleFanout)
                                 createdTopo = True
-                            
+
                             createdTopoPing = False
                             createTopoPingLoss = False
-                            
+
                             node1 = raw_input("\nPlease select a source Host (hX): ")
                             node2 = raw_input("Please select destination Host (hX): ")
                             testIperf(net,node1,node2)
                             explanationIperf(mainOption)
 
                         if(inputSimpleTestOption == 2):
-                           
+
                             print "\n###############################################"
                             print "############# Running Ping Test ###############"
                             print "###############################################\n"
-                            
+
                             if (createdTopoPing == False):
                                 cleanup()
                                 linkopts1 = {'delay': "1ms"}
                                 linkopts2 = {'delay': "2ms"}
                                 linkopts3 = {'delay': "5ms"}
-                                
+
                                 if(mainOption == 1 ):
                                     net = startSimpleTreeTopology(inputSimpleFanout, linkopts1,linkopts2,linkopts3)
                                 if(mainOption == 2 ):
