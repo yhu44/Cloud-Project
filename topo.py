@@ -468,15 +468,10 @@ def run():
                            CLI(net)
                         if(mainOption == 2 ):
                            net = startFatTreeTopology(inputSimpleFanout)
-<<<<<<< HEAD
                            CLI(net)
                         if(mainOption == 3 ):
                            net = startJellyfishTopology(inputSimpleFanout)
                            CLI(net)
-=======
-                        if(mainOption == 3 ):
-                           net = startJellyfishTopology(inputSimpleFanout)
->>>>>>> 34b7ea5a700b5c2fa08baa8eaf02efa50f608ca1
                         createdTopo = True
                 if(inputSimpleOption == 2):
                     simpleTestGoBack = False
