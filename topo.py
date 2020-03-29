@@ -483,10 +483,13 @@ def run():
                             cleanup()
                         if(mainOption == 1 ):
                            net = startSimpleTreeTopology(inputSimpleFanout)
+                           CLI(net)
                         if(mainOption == 2 ):
-                           net = startFatTreeTopology(inputSimpleFanout)     
+                           net = startFatTreeTopology(inputSimpleFanout)
+                           CLI(net)
                         if(mainOption == 3 ):
-                           net = startJellyfishTopology(inputSimpleFanout)  
+                           net = startJellyfishTopology(inputSimpleFanout)
+                           CLI(net)
                         createdTopo = True
                 if(inputSimpleOption == 2):
                     simpleTestGoBack = False
