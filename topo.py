@@ -36,23 +36,27 @@ class JellyfishTopology(Topo):
     #Then connects a host to the remaing port
     def connectEdgeSwitchesToHosts(self, linkopts2, linkopts3):
         for switch in self.edgeSwitches:
-            while (len(self.countUsedPorts[switch]) < self.numPorts - 1):
-                randomSwitch = random.choice(self.edgeSwitches)
-                if (len(self.countUsedPorts[randomSwitch]) < self.numPorts - 1 and randomSwitch != switch and randomSwitch not in self.countUsedPorts[switch]):
+            self.countHosts += 1
+            host = self.addHost("h%s" % self.countHosts)
+            self.countEdges += 1
+            self.addLink(host, switch, **linkopts3)
+            self.countUsedPorts[switch].append(host)
+
+        for switch in (self.edgeSwitches + self.coreSwitches):
+            while (len(self.countUsedPorts[switch]) < self.numPorts):
+                randomSwitch = random.choice(self.edgeSwitches + self.coreSwitches)
+                if (len(self.countUsedPorts[randomSwitch]) < self.numPorts and randomSwitch != switch and randomSwitch not in self.countUsedPorts[switch]):
                     self.addLink(switch, randomSwitch,**linkopts2)
+                    print(switch + "<-->" + randomSwitch)
                     self.countEdges += 1
                     self.countUsedPorts[switch].append(randomSwitch)
                     self.countUsedPorts[randomSwitch].append(switch)
 
-            host = self.addHost("h%s" % self.countHosts)
-            self.addLink(host,switch,**linkopts3)
-            self.countEdges += 1
-            self.countHosts += 1
-            self.countUsedPorts[switch].append(host)
-
 
     def __init__(self, linkopts1, linkopts2, linkopts3, p = 2, **opts):
         super(JellyfishTopology, self).__init__(**opts)
+        seed = random.randrange(sys.maxsize)
+        rng = random.seed(2127772746744491812L)
         self.numPorts = p
         countS = 0
         countH = 0
@@ -188,7 +192,7 @@ class FatTreeTopology(Topo):
         for core in self.cores:
             for pod in self.pods:
                 if coreSwitchPos < self.numSwitchesPerPod:
-                    self.addLink(j.layers[0][(self.numSwitchesPerPod/2)-1],core,**linkopts1)
+                    self.addLink(pod.layers[0][(self.numSwitchesPerPod/2)-1],core,**linkopts1)
                 else:
                     self.addLink(pod.layers[0][self.numSwitchesPerPod/2],core,**linkopts1)
             coreSwitchPos += 1
@@ -468,15 +472,10 @@ def run():
                            CLI(net)
                         if(mainOption == 2 ):
                            net = startFatTreeTopology(inputSimpleFanout)
-<<<<<<< HEAD
                            CLI(net)
                         if(mainOption == 3 ):
                            net = startJellyfishTopology(inputSimpleFanout)
                            CLI(net)
-=======
-                        if(mainOption == 3 ):
-                           net = startJellyfishTopology(inputSimpleFanout)
->>>>>>> 34b7ea5a700b5c2fa08baa8eaf02efa50f608ca1
                         createdTopo = True
                 if(inputSimpleOption == 2):
                     simpleTestGoBack = False
