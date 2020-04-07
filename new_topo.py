@@ -383,6 +383,42 @@ def explanationPingLoss():
     print("Based of following formula: \n\tnumber packets lost / number packets trasmitted\n4we have 1 packet lost / 5 packets trasmitted = 20% packet loss -> minimum expected packet loss value.")
     print "Anything higher than this value, are due to possible network issues."
 
+def testRandomIperf(net):
+    print("starting random iperf test")
+    port_min = 1025
+    port_max = 65536
+
+    hosts = net.hosts
+
+    for host in range(len(hosts) / 2):
+        port = str(random.randint(port_min, port_max))
+        endpts = random.sample(hosts, 2)
+        src = net.get(str(endpts[0]))
+        dst = net.get(str(endpts[1]))
+	
+	#set up server	
+        server_cmd = "iperf -s -p "
+        server_cmd += port
+        server_cmd += " -i 1"
+        server_cmd += " & "
+
+        client_cmd = "iperf -c "
+        client_cmd += dst.IP() + " "
+        client_cmd += " -p " + port
+        client_cmd += " -t " + str(2)
+        client_cmd += " & "
+	
+	#sleep as flows are generated
+	
+
+	#send cmd
+        dst.cmdPrint(server_cmd)
+        src.cmdPrint(client_cmd)
+	
+    time.sleep(180)
+    #kill iperf in all hosts
+    for host in net.hosts:
+        host.cmdPrint('killall -9 iperf')
 def testPing(net,node1,node2):
     print "\n\n#############################################"
     print "######## Pinging between %s and %s ##########" % (node1,node2)
@@ -409,7 +445,7 @@ def run():
     while(not exit):
         #Menu
         print "\n\n######################################"
-        print "#### Protocolos em Redes de Dados ####"
+        print "####### Choose a topology ############"
         print "######################################\n"
         print "Main Menu:\n"
         print " 1 - Simple Tree Topology"
@@ -515,9 +551,10 @@ def run():
                             createdTopoPing = False
                             createTopoPingLoss = False
 
-                            node1 = raw_input("\nPlease select a source Host (hX): ")
-                            node2 = raw_input("Please select destination Host (hX): ")
-                            testIperf(net,node1,node2)
+                            #node1 = raw_input("\nPlease select a source Host (hX): ")
+                            #node2 = raw_input("Please select destination Host (hX): ")
+                            #testIperf(net,node1,node2)
+                            testRandomIperf(net)
                             explanationIperf(mainOption)
 
                         if(inputSimpleTestOption == 2):
