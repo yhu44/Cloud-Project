@@ -11,7 +11,7 @@ Open two ssh instances and do the following commands in order on the appopriate 
 
      On instance 1:
 
-     	sudo mn --custom mininet/custom/fattree.py --topo fattree
+     	sudo mn --custom topos/fattree.py --topo fattree
 
      On instance 2:
 
