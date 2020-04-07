@@ -3,3 +3,28 @@ To run the file with mininet, simply type:
 sudo python -tt topo.py
 
 Then follow the on screen instructions to create the approriate topologies and run the appropriate tests.
+
+
+To test the pathTracker do the following:
+
+Open two ssh instances and do the following commands in order on the appopriate instances.
+
+     On instance 1:
+
+     	sudo mn --custom mininet/custom/fattree.py --topo fattree
+
+     On instance 2:
+
+        python startFattree.py
+
+     On instance 1:
+
+     	mininet> pingall
+
+
+     On instance 2:
+
+     	python tracePacket.py
+
+
+I will attempt to make this doable on one instance but this should do for now.

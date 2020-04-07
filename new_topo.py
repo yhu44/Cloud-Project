@@ -11,7 +11,7 @@ from mininet.log import setLogLevel
 from mininet.clean import cleanup
 from mininet.cli import CLI
 from mininet.util import pmonitor
-from mininet.node import OVSSwitch, OVSKernelSwitch
+from mininet.node import Node, OVSSwitch, OVSKernelSwitch
 import time
 import os
 import sys
@@ -257,6 +257,7 @@ def startJellyfishTopology(ports=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10}, 
     net.start()
     print("Loading Spanning Tree Protocol...")
     # For each switch, enables stp
+    
     for switch in net.switches:
         os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name)
     time.sleep(len(net.switches)*2) # Waits until all switches are enabled
