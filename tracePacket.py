@@ -1,6 +1,7 @@
 import os
 src = input("Give last IP digit of src: ")
 dst = input("Give last IP digit of dst: ")
+
 src = '10.0.0.' + str(src)
 dst = '10.0.0.' + str(dst)
 

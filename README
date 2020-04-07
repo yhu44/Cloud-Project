@@ -27,4 +27,8 @@ Open two ssh instances and do the following commands in order on the appopriate 
      	python tracePacket.py
 
 
+If you wanna see all paths for all combinations of hosts, replace tracePacket.py
+with traceAllPackets.py
+
+
 I will attempt to make this doable on one instance but this should do for now.
