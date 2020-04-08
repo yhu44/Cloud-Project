@@ -65,12 +65,12 @@ class FatTreeTopology(Topo):
            #add hosts
            for j in range(self.k/2):
                 self.countHosts +=1
-                self.addLink(self.addHost("h%s" % (self.countHosts)),edgeSwitch)
+                self.addLink(self.addHost("h%s" % (self.countHosts)),edgeSwitch, **linkopts3)
                 self.hostForPod += 1
 
         for i in pod.layers[0]: # Add link btw each agg switch (0) and an edge switch (1)
            for j in pod.layers[1]:
-                self.addLink(j,i)
+                self.addLink(j,i, **linkopts2)
 
         return pod
 
