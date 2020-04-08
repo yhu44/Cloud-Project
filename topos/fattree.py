@@ -79,7 +79,7 @@ class FatTreeTopology(Topo):
 def startFatTreeTopology(k=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10},linkopts3 = {'bw':10}):
     topo = FatTreeTopology(linkopts1,linkopts2,linkopts3,k=k)
 
-    print("\n---------------------%s-ary fat tree  ---------------" % self.k )
+    print("\n---------------------%s-ary fat tree  ---------------" % topo.k )
     print("number of pods                            : %s" % topo.k)
     print("hosts per pod                             : %s" % topo.hostForPod)
     print("number of switch ports in pod             : %s" % topo.k)
