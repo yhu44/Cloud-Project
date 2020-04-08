@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.link import TCLink
@@ -100,3 +98,6 @@ def startJellyfishTopology(ports=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10}, 
         os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name)
     time.sleep(len(net.switches)*2) # Waits until all switches are enabled
     return net
+
+
+topos = { 'jellyfish': ( lambda: JellyfishTopology() ) }

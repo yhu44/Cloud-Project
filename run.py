@@ -14,8 +14,8 @@ import os
 import sys
 import random
 import math
-from fattree_topo import startFatTreeTopology, FatTreeTopology
-from jellyfish_topo import startJellyfishTopology, JellyfishTopology
+from topos.fattree import startFatTreeTopology, FatTreeTopology
+from topos.jellyfish import startJellyfishTopology, JellyfishTopology
 
 # Given a specific parameter, it returns the minimum value between hostSrc and hostDst for that parameter
 # eg. Param = "bw"

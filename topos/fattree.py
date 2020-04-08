@@ -1,5 +1,12 @@
 from mininet.topo import Topo
+from mininet.net import Mininet
+from mininet.link import TCLink
+from mininet.util import irange
 from mininet.node import OVSKernelSwitch
+import time
+import os
+import sys
+import math
 
 
 class Pod(object):
@@ -66,5 +73,28 @@ class FatTreeTopology(Topo):
                 self.addLink(j,i)
 
         return pod
+
+
+# Creates a Fat Tree Topology
+def startFatTreeTopology(k=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10},linkopts3 = {'bw':10}):
+    topo = FatTreeTopology(linkopts1,linkopts2,linkopts3,k=k)
+
+    print("\n---------------------%s-ary fat tree  ---------------" % self.k )
+    print("number of pods                            : %s" % topo.k)
+    print("hosts per pod                             : %s" % topo.hostForPod)
+    print("number of switch ports in pod             : %s" % topo.k)
+    print("number of core switches                   : %s" % topo.numCores)
+    print("total number of hosts                     : %s" % topo.countHosts)
+    print("-----------------------------------------------------")
+
+    net = Mininet(topo,link=TCLink)
+    net.start()
+    print("Loading Spanning Tree Protocol...")
+    # For each switch, enables stp
+    for switch in net.switches:
+        os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name)
+    time.sleep(len(net.switches)*2) # Waits until all switches are enabled
+    return net
+
 
 topos = { 'fattree': ( lambda: FatTreeTopology() ) }
