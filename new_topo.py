@@ -1,6 +1,3 @@
-############################################
-# @dcarou - diogo@dcarou.com
-############################################
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from mininet.topo import Topo
@@ -40,11 +37,11 @@ class JellyfishTopology(Topo):
             switches.append(self.addSwitch('s%s' % n))
             openPorts.append(self.nPorts)
             if (serverI < self.nServers):
-                for i in range(serverI, serverI + self.nPorts/4): 
+                for i in range(serverI, serverI + self.nPorts/4):
                     self.addLink(switches[n], servers[i])
                     openPorts[n] -= 1
             serverI += self.nPorts/4
-        
+
         links = set()
         switchesLeft = self.nSwitches
         consecFails = 0
@@ -82,10 +79,10 @@ class JellyfishTopology(Topo):
                             continue
                         if (i, rLink[1]) in links:
                             continue
-                        
+
                         links.remove(rLink)
                         links.remove(rLink[::-1])
-                                     
+
                         links.add((i, rLink[0]))
                         links.add((rLink[0], i))
                         links.add((i, rLink[1]))
@@ -96,60 +93,6 @@ class JellyfishTopology(Topo):
         for link in links:
             if link[0] < link[1]:
                 self.addLink(switches[link[0]], switches[link[1]])
-
-
-# Creates Simple Tree Topology
-class SimpleTreeTopology(Topo):
-    def __init__(self,linkopts1,linkopts2,linkopts3,k=2, **opts):
-
-       #linkopts1 = performance parameters for the links between core and aggregation switches
-       #linkopts2 = performance parameters for the links between aggregation and edge switches
-       #linkopts3 = performance parameters for the links between edge switches and host
-
-        super(SimpleTreeTopology, self).__init__(**opts)
-        self.fanout = k
-        # Adds Core Switch
-        coreSwitch = self.addSwitch("s1")
-        countS = 1
-        countH = 0
-        self.edgeHostConn = 0
-        self.numAgg = 0
-        self.numEdge = 0
-        self.edgeAggConn = 0
-        self.aggCoreConn = 0
-
-        #Adds Aggregation Switches and links them to Core Switch
-        for i in irange(1,k):
-            countS = countS + 1
-            aggregationSwitch = self.addSwitch("s%s" % (countS))
-            self.numAgg +=1
-            self.addLink(aggregationSwitch,coreSwitch,**linkopts1)
-            self.aggCoreConn +=1
-
-            #Adds Edge Switches and links them to Aggregation Switches
-            for j in irange(1,k):
-                countS = countS + 1
-                edgeSwitch = self.addSwitch("s%s" % (countS))
-                self.numEdge += 1
-                self.addLink(edgeSwitch,aggregationSwitch,**linkopts2)
-                self.edgeAggConn +=1
-
-                #Adds Hosts and links them to Edge Switches
-                for n in irange(1,k):
-                    countH = countH + 1
-                    host = self.addHost("h%s" % countH)
-                    self.addLink(host,edgeSwitch,**linkopts3)
-                    self.edgeHostConn += 1
-
-        print("\n---------------------%s-ary simple tree  ---------------" % self.fanout )
-        print("edge switch-host connections              : %s" % self.edgeHostConn)
-        print("edge switch-aggregation switch connections: %s" % self.edgeAggConn)
-        print("aggregation switch-core switch connections: %s" % self.aggCoreConn)
-        print("number of edge switches                   : %s" % self.numEdge)
-        print("number of aggregation switches            : %s" % self.numAgg)
-        print("number of core switches                   : 1")
-        print("total number of hosts                     : %s" % countH)
-        print("-----------------------------------------------------")
 
 class Pod(object):
     def __init__(self):
@@ -230,14 +173,6 @@ class FatTreeTopology(Topo):
 
         return pod
 
-# Creates a Simple Tree Topology
-def startSimpleTreeTopology(fanout=2,linkopts1 = {'bw':20},linkopts2 = {'bw':1},linkopts3 = {'bw':10}):
-    topo = SimpleTreeTopology(linkopts1,linkopts2,linkopts3,k=fanout)
-    net = Mininet(topo,link=TCLink)
-    net.start()
-   # CLI(net)
-    return net
-
 # Creates a Fat Tree Topology
 def startFatTreeTopology(k=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10},linkopts3 = {'bw':10}):
     topo = FatTreeTopology(linkopts1,linkopts2,linkopts3,k=k)
@@ -257,7 +192,7 @@ def startJellyfishTopology(ports=4,linkopts1 = {'bw':10},linkopts2 = {'bw':10}, 
     net.start()
     print("Loading Spanning Tree Protocol...")
     # For each switch, enables stp
-    
+
     for switch in net.switches:
         os.system('ovs-vsctl set Bridge "%s" stp_enable=true' % switch.name)
     time.sleep(len(net.switches)*2) # Waits until all switches are enabled
@@ -278,7 +213,7 @@ def getMinParamBetweenHosts(net, hostSrc,hostDst,param):
             minValue = link.intf1.params[param]
             break
 
-    # Goes trough the tree from the leafs to the root, compares the values,
+    # Goes through the tree from the leafs to the root, compares the values,
     # and returns the minimum value for the given parameter
     while(True):
         for link in net.links:
@@ -309,7 +244,7 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
     srcToDst = (nameNode1+"-")
     dstToSrc = nameNode2
 
-    # Goes trough the tree from the leafs to the root,
+    # Goes through the tree from the leafs to the root,
     # and returns the path and total delay between hostSrc and hostDst
     while(True):
 
@@ -410,30 +345,27 @@ def run():
     while(not exit):
         #Menu
         print "\n\n######################################"
-        print "#### Protocolos em Redes de Dados ####"
+        print "#### Protocols ####"
         print "######################################\n"
         print "Main Menu:\n"
-        print " 1 - Simple Tree Topology"
-        print " 2 - Fat Tree Topology"
-        print " 3 - Jellyfish Topology"
-        print " 4 - Exit Program\n"
+        print " 1 - Fat Tree Topology"
+        print " 2 - Jellyfish Topology"
+        print " 3 - Exit Program\n"
         mainOption = input('Please select an option from the menu: ')
 
-        if(mainOption == 4):
+        if(mainOption == 3):
              exit = True
 
-        if(mainOption == 1 or mainOption == 2 or mainOption == 3):
+        if(mainOption == 1 or mainOption == 2):
             simpleGoBack = False
             fatGoBack = False
             createdTopo = False
             createdTopoPing=False
             createdTopoPingLoss=False
             print "\n\n######################################"
-            if(mainOption == 1 ):
-                print "####### Simple Tree Topology #######"
-            if (mainOption == 2):
+            if (mainOption == 1):
                 print "####### Fat Tree Topology #######"
-            if (mainOption == 3):
+            if (mainOption == 2):
                 print "####### Jellyfish Topology #######"
             print "######################################\n"
 
@@ -442,11 +374,9 @@ def run():
             while(not simpleGoBack):
 
                 print "\n######################################"
-                if(mainOption == 1 ):
-                    print "  Simple Tree Topology with Fanout %s" % inputSimpleFanout
-                if(mainOption == 2 ):
+                if(mainOption == 1):
                     print "  Fat Tree Topology with Fanout %s" % inputSimpleFanout
-                if(mainOption == 3 ):
+                if(mainOption == 2):
                     print "  JellyfishTopology Topology with Ports %s" % inputSimpleFanout
                 print "######################################\n"
                 print "Menu:\n"
@@ -466,13 +396,10 @@ def run():
                     else:
                         if (createdTopoPing or createdTopoPingLoss):
                             cleanup()
-                        if(mainOption == 1 ):
-                           net = startSimpleTreeTopology(inputSimpleFanout)
-                           CLI(net)
-                        if(mainOption == 2 ):
+                        if(mainOption == 1):
                            net = startFatTreeTopology(inputSimpleFanout)
                            CLI(net)
-                        if(mainOption == 3 ):
+                        if(mainOption == 2):
                            net = startJellyfishTopology(inputSimpleFanout)
                            CLI(net)
                         createdTopo = True
@@ -482,11 +409,9 @@ def run():
                     createdTopoPingLoss= False
                     while(not simpleTestGoBack):
                         print "\n###############################################"
-                        if(mainOption == 1 ):
-                            print " Tests for Simple Tree Topology with Fanout %s" % inputSimpleFanout
-                        if(mainOption == 2 ):
+                        if(mainOption == 1):
                             print " Tests for Fat Tree Topology with Fanout %s" % inputSimpleFanout
-                        if(mainOption == 3 ):
+                        if(mainOption == 2):
                             print " Tests for JellyfishTopology Topology with Fanout %s" % inputSimpleFanout
                         print "###############################################\n"
                         print "Menu:\n"
@@ -505,11 +430,9 @@ def run():
                             print "############# Running iPerf Test ##############"
                             print "###############################################\n"
                             if (createdTopo == False):
-                                if(mainOption == 1 ):
-                                    net = startSimpleTreeTopology(inputSimpleFanout)
-                                if(mainOption == 2 ):
+                                if(mainOption == 1):
                                     net = startFatTreeTopology(inputSimpleFanout)
-                                if(mainOption == 3 ):
+                                if(mainOption == 2):
                                     net = startJellyfishTopology(inputSimpleFanout)
                                 createdTopo = True
 
@@ -533,11 +456,9 @@ def run():
                                 linkopts2 = {'delay': "2ms"}
                                 linkopts3 = {'delay': "5ms"}
 
-                                if(mainOption == 1 ):
-                                    net = startSimpleTreeTopology(inputSimpleFanout, linkopts1,linkopts2,linkopts3)
-                                if(mainOption == 2 ):
+                                if(mainOption == 1):
                                     net = startFatTreeTopology(inputSimpleFanout, linkopts1,linkopts2,linkopts3)
-                                if(mainOption == 3 ):
+                                if(mainOption == 2):
                                     net = startJellyfishTopology(inputSimpleFanout, linkopts1,linkopts2, linkopts3)
                                 createdTopoPing = True
                             createdTopo = False
@@ -558,11 +479,9 @@ def run():
                                 linkopts2 = {'loss':10}
                                 linkopts3 = {'loss':10}
 
-                                if(mainOption == 1 ):
-                                    net = startSimpleTreeTopology(inputSimpleFanout,linkopts1,linkopts2,linkopts3)
-                                if(mainOption == 2 ):
+                                if(mainOption == 1):
                                     net = startFatTreeTopology(inputSimpleFanout,linkopts1,linkopts2,linkopts3)
-                                if(mainOption == 3 ):
+                                if(mainOption == 2):
                                     net = startJellyfishTopology(inputSimpleFanout,linkopts1,linkopts2, linkopts3)
                                 createdTopoPingLoss=True
                             createdTopo = False
