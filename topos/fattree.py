@@ -42,9 +42,9 @@ class FatTreeTopology(Topo):
         for core in self.cores:
             for pod in self.pods:
                 if coreSwitchPos < self.numSwitchesPerPod:
-                    self.addLink(pod.layers[0][(self.numSwitchesPerPod/2)-1],core)
+                    self.addLink(pod.layers[0][(self.numSwitchesPerPod/2)-1],core,**linkopts1)
                 else:
-                    self.addLink(pod.layers[0][self.numSwitchesPerPod/2],core)
+                    self.addLink(pod.layers[0][self.numSwitchesPerPod/2],core,**linkopts1)
             coreSwitchPos += 1
 
     #Function for Creating Pods
