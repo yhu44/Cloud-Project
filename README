@@ -11,14 +11,7 @@ Open two ssh instances and do the following commands in order on the appopriate 
 
      On instance 1:
 
-     	sudo mn --custom topos/fattree.py --topo fattree
-
-     On instance 2:
-
-        python startFattree.py
-
-     On instance 1:
-
+     	sudo python startFatTree.py
      	mininet> pingall
 
 
