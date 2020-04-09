@@ -4,7 +4,7 @@ from mininet.link import TCLink
 from mininet.cli import CLI
 from mininet.clean import cleanup
 import time
-from fattree  import FatTreeTopology
+from topos.fattree import FatTreeTopology
 
 print("Cleaning up..")
 cleanup()
