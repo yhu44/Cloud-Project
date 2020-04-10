@@ -1,0 +1,9 @@
+------------------------------------------------------------
+Server listening on TCP port 2
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  4] local 10.0.0.11 port 2 connected with 10.0.0.14 port 34302
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0- 1.0 sec   221 MBytes  1.85 Gbits/sec
+[  4]  1.0- 2.0 sec   230 MBytes  1.93 Gbits/sec
+[  4]  0.0- 2.0 sec   451 MBytes  1.86 Gbits/sec

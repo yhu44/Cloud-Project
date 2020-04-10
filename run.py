@@ -87,6 +87,45 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
             return result
 
 # iPerf Test
+
+def testRandomIperf(net):
+    print("starting random iperf test")
+    port_min = 0
+    port_max = 3
+
+    hosts = net.hosts
+
+    for host in range(len(hosts) / 2):
+        port = str(random.randint(port_min, port_max))
+        endpts = random.sample(hosts, 2)
+        src = net.get(str(endpts[0]))
+        dst = net.get(str(endpts[1]))
+	
+	#set up server	
+        server_cmd = "iperf -s -p "
+        server_cmd += port
+        server_cmd += " -i 1"
+        server_cmd += " > logs/flow%003d" % host + ".txt 2>&1"
+        server_cmd += " & "
+
+        client_cmd = "iperf -c "
+        client_cmd += dst.IP() + " "
+        client_cmd += " -p " + port
+        client_cmd += " -t " + str(2)
+        client_cmd += " & "
+	
+	#sleep as flows are generated
+	
+
+	#send cmd
+        dst.cmdPrint(server_cmd)
+        src.cmdPrint(client_cmd)
+	
+    time.sleep(180)
+    #kill iperf in all hosts
+    for host in net.hosts:
+        host.cmdPrint('killall -9 iperf')
+
 def testIperf(net,hostSrc,hostDst):
     nodeHostSrc, nodeHostDst= net.get(hostSrc,hostDst)
     print "\n\n###########################"
@@ -256,9 +295,9 @@ def run():
                             createdTopoPing = False
                             createTopoPingLoss = False
 
-                            node1 = raw_input("\nPlease select a source Host (hX): ")
-                            node2 = raw_input("Please select destination Host (hX): ")
-                            testIperf(net,node1,node2)
+                            #node1 = raw_input("\nPlease select a source Host (hX): ")
+                            #node2 = raw_input("Please select destination Host (hX): ")
+                            testRandomIperf(net)
                             explanationIperf(mainOption)
 
                         if(inputSimpleTestOption == 2):
