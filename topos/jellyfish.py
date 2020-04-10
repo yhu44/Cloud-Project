@@ -21,13 +21,13 @@ class JellyfishTopology(Topo):
 
     def create_topology(self):
         servers = []
-        for n in range(self.nServers):
+        for n in range(1,self.nServers+1):
             servers.append(self.addHost('h%s' % n))
 
         switches = []
         openPorts = []
         serverI = 0
-        for n in range(self.nSwitches):
+        for n in range(1,self.nSwitches+1):
             switches.append(self.addSwitch('s%s' % n))
             openPorts.append(self.nPorts)
             if (serverI < self.nServers):
