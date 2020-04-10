@@ -121,7 +121,7 @@ def testRandomIperf(net):
         dst.cmdPrint(server_cmd)
         src.cmdPrint(client_cmd)
 	
-    time.sleep(180)
+    time.sleep(60)
     #kill iperf in all hosts
     for host in net.hosts:
         host.cmdPrint('killall -9 iperf')
