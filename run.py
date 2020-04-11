@@ -115,7 +115,7 @@ def testRandomIperf(net, option, fanout):
         client_cmd = "iperf -c "
         client_cmd += dst.IP() + " "
         client_cmd += " -p " + port
-        client_cmd += " -t " + str(2)
+        client_cmd += " -t " + str(60)
         client_cmd += " & "
 
 	#sleep as flows are generated

@@ -15,7 +15,7 @@ class Pod(object):
 
 class FatTreeTopology(Topo):
 
-    def __init__(self,linkopts1={'bw':10},linkopts2={'bw':10},linkopts3={'bw':10},k=4, **opts):
+    def __init__(self,linkopts1,linkopts2,linkopts3,k=4, **opts):
         Topo.__init__( self )
         self.k = k
         self.pods = []
@@ -29,7 +29,7 @@ class FatTreeTopology(Topo):
         #Creates Core Switches
         for i in range(self.numSwitchesPerPod**2):
             self.countSwitch += 1
-            coreSwitch = self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone')
+            coreSwitch = self.addSwitch("s%s" % (self.countSwitch))
             self.cores.append(coreSwitch)
             self.numCores+=1
 
@@ -42,9 +42,9 @@ class FatTreeTopology(Topo):
         for core in self.cores:
             for pod in self.pods:
                 if coreSwitchPos < self.numSwitchesPerPod:
-                    self.addLink(pod.layers[0][(self.numSwitchesPerPod/2)-1],core,**linkopts1)
+                    self.addLink(pod.layers[0][(self.numSwitchesPerPod/2)-1],core)
                 else:
-                    self.addLink(pod.layers[0][self.numSwitchesPerPod/2],core,**linkopts1)
+                    self.addLink(pod.layers[0][self.numSwitchesPerPod/2],core)
             coreSwitchPos += 1
 
     #Function for Creating Pods
@@ -55,22 +55,22 @@ class FatTreeTopology(Topo):
         for i in range(self.k/2): #for number of switches in pod
            #Add agg switches
            self.countSwitch += 1
-           pod.layers[0].append(self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone'))
+           pod.layers[0].append(self.addSwitch("s%s" % (self.countSwitch)))
 
            #Add edge switches
            self.countSwitch += 1
-           edgeSwitch = self.addSwitch("s%s" % (self.countSwitch),cls=OVSKernelSwitch,failMode='standalone')
+           edgeSwitch = self.addSwitch("s%s" % (self.countSwitch))
            pod.layers[1].append(edgeSwitch)
 
            #add hosts
            for j in range(self.k/2):
                 self.countHosts +=1
-                self.addLink(self.addHost("h%s" % (self.countHosts)),edgeSwitch, **linkopts3)
+                self.addLink(self.addHost("h%s" % (self.countHosts)),edgeSwitch)
                 self.hostForPod += 1
 
         for i in pod.layers[0]: # Add link btw each agg switch (0) and an edge switch (1)
            for j in pod.layers[1]:
-                self.addLink(j,i, **linkopts2)
+                self.addLink(j,i)
 
         return pod
 
