@@ -103,13 +103,13 @@ def testRandomIperf(net, option, fanout):
 
 	#set up server
         topo = "fattree"
-        if mainOption == 2:
+        if option == 2:
             topo = "jellyfish"
 
         server_cmd = "iperf -s -p "
         server_cmd += port
         server_cmd += " -i 1"
-        server_cmd += " > " + topo +"-logs/" + "fanout-" + fanout + "/flow%003d" % host + ".txt 2>&1"
+        server_cmd += " > " + topo +"-logs/" + "fanout-" + str(fanout) + "/flow%003d" % host + ".txt 2>&1"
         server_cmd += " & "
 
         client_cmd = "iperf -c "

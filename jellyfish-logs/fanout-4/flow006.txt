@@ -1,0 +1,9 @@
+------------------------------------------------------------
+Server listening on TCP port 2
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  4] local 10.0.0.12 port 2 connected with 10.0.0.10 port 51312
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0- 1.0 sec   440 MBytes  3.69 Gbits/sec
+[  4]  1.0- 2.0 sec   486 MBytes  4.07 Gbits/sec
+[  4]  0.0- 2.0 sec   939 MBytes  3.92 Gbits/sec
