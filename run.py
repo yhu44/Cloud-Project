@@ -88,7 +88,7 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
 
 # iPerf Test
 
-def testRandomIperf(net):
+def testRandomIperf(net, option, fanout):
     print("starting random iperf test")
     port_min = 0
     port_max = 3
@@ -100,12 +100,16 @@ def testRandomIperf(net):
         endpts = random.sample(hosts, 2)
         src = net.get(str(endpts[0]))
         dst = net.get(str(endpts[1]))
-	
-	#set up server	
+
+	#set up server
+        topo = "fattree"
+        if mainOption == 2:
+            topo = "jellyfish"
+
         server_cmd = "iperf -s -p "
         server_cmd += port
         server_cmd += " -i 1"
-        server_cmd += " > logs/flow%003d" % host + ".txt 2>&1"
+        server_cmd += " > " + topo +"-logs/" + "fanout-" + fanout + "/flow%003d" % host + ".txt 2>&1"
         server_cmd += " & "
 
         client_cmd = "iperf -c "
@@ -113,14 +117,14 @@ def testRandomIperf(net):
         client_cmd += " -p " + port
         client_cmd += " -t " + str(2)
         client_cmd += " & "
-	
+
 	#sleep as flows are generated
-	
+
 
 	#send cmd
         dst.cmdPrint(server_cmd)
         src.cmdPrint(client_cmd)
-	
+
     time.sleep(60)
     #kill iperf in all hosts
     for host in net.hosts:
@@ -297,7 +301,7 @@ def run():
 
                             #node1 = raw_input("\nPlease select a source Host (hX): ")
                             #node2 = raw_input("Please select destination Host (hX): ")
-                            testRandomIperf(net)
+                            testRandomIperf(net, mainOption, inputSimpleFanout)
                             explanationIperf(mainOption)
 
                         if(inputSimpleTestOption == 2):
