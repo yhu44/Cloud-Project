@@ -15,7 +15,7 @@ class JellyfishTopology(Topo):
         super(JellyfishTopology, self).__init__()
         self.nServers = int((p**2)*(2**(math.log(p,2)-2)))
         self.nSwitches = ((p/2)**2 + p**2)
-        self.nPorts = p
+        self.nPorts = int(math.pow(2, math.ceil(math.log(p,2))))
         self.create_topology()
 
     def create_topology(self):
@@ -31,8 +31,9 @@ class JellyfishTopology(Topo):
             openPorts.append(self.nPorts)
             if (serverI < self.nServers):
                 for i in range(serverI, serverI + self.nPorts/4):
-                    self.addLink(switches[n], servers[i])
-                    openPorts[n] -= 1
+                    if i < len(servers):
+                        self.addLink(switches[n], servers[i])
+                        openPorts[n] -= 1
             serverI += self.nPorts/4
 
         links = set()
