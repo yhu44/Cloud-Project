@@ -4,24 +4,30 @@ sudo python -tt run.py
 
 Then follow the on screen instructions to create the approriate topologies and run the appropriate tests.
 
+Current topologies:
 
-To test the pathTracker do the following:
+Fattree --> Creates a standard Fattree topology with desired fannout. (Works best with fannout 8 or less)
+Jellyfish --> Creates a random Jellfish topology with desired number of ports per switch.
 
-Open two ssh instances and do the following commands in order on the appopriate instances.
+Note: A Fattree with the same fan-out as a Jelly will contain the same number of switches and hosts
+meaning that both graphs are resource equivalent.
+     
+The following tests are available:
 
-     On instance 1:
+ Iperf Test --> Measures average throughput of the network with half of the nodes performing iperf tests
+ Ping Test --> Gives ping information from one host to another
+ Print All Paths --> Prints all of the switches that a packet hits from one host to another from a pingall
 
-     	sudo python startFatTree.py
-     	mininet> pingall
+To access the Jupyter Notebook of our test results:
 
+   http://35.230.174.87:8888/
 
-     On instance 2:
+Access Token:
 
-     	python tracePacket.py
+   49394293f4944ce6049defb6b9117bafb22647edb6672bf0
 
+If there are any issues, email anyone on the team!
 
-If you wanna see all paths for all combinations of hosts, replace tracePacket.py
-with traceAllPackets.py
-
-
-I will attempt to make this doable on one instance but this should do for now.
+Julian White (jwhit129@jhu.edu)
+Yidong Hu (yhu44@jhu.edu)
+Darian Low (dlow3@jhu.edu)

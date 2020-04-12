@@ -1,7 +1,4 @@
 ------------------------------------------------------------
-Server listening on TCP port 32540
+Server listening on TCP port 21218
 TCP window size: 85.3 KByte (default)
 ------------------------------------------------------------
-[  4] local 10.0.0.31 port 32540 connected with 10.0.0.24 port 42330
-[ ID] Interval       Transfer     Bandwidth
-[  4]  0.0- 1.0 sec   101 MBytes   844 Mbits/sec

@@ -1,7 +1,4 @@
 ------------------------------------------------------------
-Server listening on TCP port 61085
+Server listening on TCP port 64088
 TCP window size: 85.3 KByte (default)
 ------------------------------------------------------------
-[  4] local 10.0.0.9 port 61085 connected with 10.0.0.3 port 33904
-[ ID] Interval       Transfer     Bandwidth
-[  4]  0.0- 1.0 sec  94.7 MBytes   795 Mbits/sec

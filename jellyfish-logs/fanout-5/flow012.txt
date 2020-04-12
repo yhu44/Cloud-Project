@@ -1,7 +1,4 @@
 ------------------------------------------------------------
-Server listening on TCP port 9500
+Server listening on TCP port 44280
 TCP window size: 85.3 KByte (default)
 ------------------------------------------------------------
-[  4] local 10.0.0.8 port 9500 connected with 10.0.0.7 port 36542
-[ ID] Interval       Transfer     Bandwidth
-[  4]  0.0- 1.0 sec   103 MBytes   868 Mbits/sec
