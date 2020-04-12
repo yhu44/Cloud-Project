@@ -11,7 +11,9 @@ Jellyfish --> Creates a random Jellfish topology with desired number of ports pe
 
 Note: A Fattree with the same fan-out as a Jelly will contain the same number of switches and hosts
 meaning that both graphs are resource equivalent.
-     
+
+Our code for the fattree topology was based off the following: https://github.com/dcarou/MininetSimpleAndFatTreeTopology/blob/master/mininet.py
+
 The following tests are available:
 
  Iperf Test --> Measures average throughput of the network with half of the nodes performing iperf tests
