@@ -90,8 +90,8 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
 
 def testRandomIperf(net, option, fanout):
     print("starting random iperf test")
-    port_min = 0
-    port_max = 3
+    port_min = 1025
+    port_max = 65536
 
     hosts = net.hosts
 
