@@ -30,11 +30,11 @@ class JellyfishTopology(Topo):
             switches.append(self.addSwitch('s%s' % str(n+1)))
             openPorts.append(self.nPorts)
             if (serverI < self.nServers):
-                for i in range(serverI, serverI + self.nPorts/4):
+                for i in range(serverI, serverI + max(1,self.nPorts/4)):
                     if i < len(servers):
                         self.addLink(switches[n], servers[i])
                         openPorts[n] -= 1
-            serverI += self.nPorts/4
+            serverI += max(1,self.nPorts/4)
 
         links = set()
         switchesLeft = self.nSwitches

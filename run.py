@@ -196,6 +196,41 @@ def testPing(net,node1,node2):
             print line,
 
 
+def printAllPaths(net):
+    net.pingAll()
+    time.sleep(2)
+    allPaths = set()
+    numSwitchHits = {}
+    for switch in net.switches:
+        os.system('sudo ovs-ofctl dump-flows {} > flows_{}.txt'.format(switch, switch))
+
+    for sr in range(1, len(net.hosts)):
+        for ds in range(1, len(net.hosts)):
+            if (sr == ds):
+                continue
+            switches = ''
+            src = '10.0.0.' + str(sr)
+            dst = '10.0.0.' + str(ds)
+            for i in range(1, len(net.switches)+1):
+                f = open('flows_{}.txt'.format('s' + str(i)))
+                entries = f.readlines()
+                for e in entries:
+                    if (e.find('nw_src={},'.format(src)) != -1 and e.find('nw_dst={},'.format(dst)) != -1 and e.find('icmp_type=0') != -1):
+                        switches += "s" + str(i) + " "
+                        if switches not in numSwitchHits:
+                            numSwitchHits[switches] = 1
+                        else:
+                            numSwitchHits[switches] += 1
+            print(src + "-->" + dst)
+            print(switches)
+            allPaths.add(switches)
+
+    print("Total number of unique paths: " + str(len(allPaths)))
+    print(numSwitchHits)
+    os.system('rm flows*')
+
+
+    
 #Main Function
 def run():
     cleanup()
@@ -278,10 +313,11 @@ def run():
                         print " 1 - iPerf Test"
                         print " 2 - Ping Test"
                         print " 3 - Ping 10% Loss"
-                        print " 4 - Go Back\n"
+                        print " 4 - Print all paths"
+                        print " 5 - Go Back\n"
                         inputSimpleTestOption = input('Please enter the desired option: ')
 
-                        if(inputSimpleTestOption == 4):
+                        if(inputSimpleTestOption == 5):
                             simpleTestGoBack = True
 
                         if(inputSimpleTestOption == 1):
@@ -351,6 +387,17 @@ def run():
                             node2 = raw_input("Please select destination Host (hX): ")
                             testPing(net,node1,node2)
                             explanationPingLoss()
+
+                        #PRINT ALL PATHS    
+                        if(inputSimpleTestOption == 4):
+                            if (createdTopo == False):
+                                cleanup()
+                                if(mainOption == 1):
+                                    net = startFatTreeTopology(inputSimpleFanout)
+                                if(mainOption == 2):
+                                    net = startJellyfishTopology(inputSimpleFanout)
+                                createdTopo = True
+                            printAllPaths(net)
 
 
 if __name__ == '__main__':

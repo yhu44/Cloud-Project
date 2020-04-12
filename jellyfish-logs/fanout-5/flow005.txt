@@ -1,0 +1,7 @@
+------------------------------------------------------------
+Server listening on TCP port 53823
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  4] local 10.0.0.23 port 53823 connected with 10.0.0.6 port 45260
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0- 1.0 sec  82.8 MBytes   695 Mbits/sec
