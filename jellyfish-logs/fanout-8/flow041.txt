@@ -1,4 +1,41 @@
 ------------------------------------------------------------
-Server listening on TCP port 3
+Server listening on TCP port 30722
 TCP window size: 85.3 KByte (default)
 ------------------------------------------------------------
+[  4] local 10.0.0.112 port 30722 connected with 10.0.0.62 port 41504
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0- 1.0 sec  24.8 MBytes   208 Mbits/sec
+[  4]  1.0- 2.0 sec  25.0 MBytes   210 Mbits/sec
+[  4]  2.0- 3.0 sec  23.4 MBytes   197 Mbits/sec
+[  4]  3.0- 4.0 sec  16.9 MBytes   142 Mbits/sec
+[  4]  4.0- 5.0 sec  23.4 MBytes   196 Mbits/sec
+[  4]  5.0- 6.0 sec  27.9 MBytes   234 Mbits/sec
+[  4]  6.0- 7.0 sec  26.0 MBytes   218 Mbits/sec
+[  4]  7.0- 8.0 sec  24.6 MBytes   207 Mbits/sec
+[  4]  8.0- 9.0 sec  29.0 MBytes   243 Mbits/sec
+[  4]  9.0-10.0 sec  32.3 MBytes   271 Mbits/sec
+[  4] 10.0-11.0 sec  27.6 MBytes   231 Mbits/sec
+[  4] 11.0-12.0 sec  30.7 MBytes   257 Mbits/sec
+[  4] 12.0-13.0 sec  22.9 MBytes   192 Mbits/sec
+[  4] 13.0-14.0 sec  24.6 MBytes   206 Mbits/sec
+[  4] 14.0-15.0 sec  22.9 MBytes   192 Mbits/sec
+[  4] 15.0-16.0 sec  24.1 MBytes   202 Mbits/sec
+[  4] 16.0-17.0 sec  26.1 MBytes   219 Mbits/sec
+[  4] 17.0-18.0 sec  32.8 MBytes   275 Mbits/sec
+[  4] 18.0-19.0 sec  25.8 MBytes   217 Mbits/sec
+[  4] 19.0-20.0 sec  20.4 MBytes   171 Mbits/sec
+[  4] 20.0-21.0 sec  22.4 MBytes   188 Mbits/sec
+[  4] 21.0-22.0 sec  22.5 MBytes   189 Mbits/sec
+[  4] 22.0-23.0 sec  23.3 MBytes   196 Mbits/sec
+[  4] 23.0-24.0 sec  16.2 MBytes   136 Mbits/sec
+[  4] 24.0-25.0 sec  17.6 MBytes   147 Mbits/sec
+[  4] 25.0-26.0 sec  21.2 MBytes   178 Mbits/sec
+[  4] 26.0-27.0 sec  30.3 MBytes   254 Mbits/sec
+[  4] 27.0-28.0 sec  25.4 MBytes   213 Mbits/sec
+[  4] 28.0-29.0 sec  26.0 MBytes   218 Mbits/sec
+[  4] 29.0-30.0 sec  23.0 MBytes   193 Mbits/sec
+[  4] 30.0-31.0 sec  28.1 MBytes   236 Mbits/sec
+[  4] 31.0-32.0 sec  11.2 MBytes  93.9 Mbits/sec
+[  4] 32.0-33.0 sec  24.4 MBytes   205 Mbits/sec
+[  4] 33.0-34.0 sec  22.6 MBytes   190 Mbits/sec
+[  4] 34.0-35.0 sec  29.2 MBytes   245 Mbits/sec
