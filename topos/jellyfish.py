@@ -15,7 +15,6 @@ class JellyfishTopology(Topo):
         super(JellyfishTopology, self).__init__()
         self.nServers = int((p**2)*(2**(math.log(p,2)-2)))
         self.nSwitches = ((p/2)**2 + p**2)
-        print(self.nServers)
         self.nPorts = p
         self.create_topology()
 
@@ -69,18 +68,18 @@ class JellyfishTopology(Topo):
                 while openPorts[i] > 1:
                     while True:
                         rLink = random.sample(links, 1)
-                        if (i, rLink[0]) in links:
+                        if (i, rLink[0][0]) in links:
                             continue
-                        if (i, rLink[1]) in links:
+                        if (i, rLink[0][1]) in links:
                             continue
 
-                        links.remove(rLink)
-                        links.remove(rLink[::-1])
+                        links.remove(rLink[0])
+                        links.remove(rLink[0][::-1])
 
-                        links.add((i, rLink[0]))
-                        links.add((rLink[0], i))
-                        links.add((i, rLink[1]))
-                        links.add((rLink[1], i))
+                        links.add((i, rLink[0][0]))
+                        links.add((rLink[0][0], i))
+                        links.add((i, rLink[0][1]))
+                        links.add((rLink[0][1], i))
 
                         openPorts[i] -= 2
 
