@@ -21,10 +21,21 @@ The following tests are available:
  Print All Paths --> Prints all of the switches that a packet hits from one host to another from a pingall
 
 To run Jupyter notebook:
-- go "jupyter" directory
-- run ""~/.local/bin/jupyter-notebook data-analysis.ipynb --ip=0.0.0.0"
-- go to http:<VM external IP address>:8888 (the external IP address is found in the GCP console next to the instance you are using)
-- password/access token is "cloud"
+  Access the virtual environment by typing:
+      source ./env/bin/activate
+  
+  Then run the jupyter server by typing:
+      jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser &
+ 
+ When the jupyter server is running, locate your external ip on GCP and append port 8888"
+      Example--> http://0.0.0.0:8888
+  
+  Locate the jupyter folder (labeled) with file:
+      data-analysis.ipynb
+      
+  Run the scripts after performing iPerf Tests to see changes 
+  
+  password/access token is "cloud"
 
 If there are any issues, email anyone on the team!
 
