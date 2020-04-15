@@ -307,14 +307,15 @@ def run():
                         if(mainOption == 1):
                             print " Tests for Fat Tree Topology with Fanout %s" % inputSimpleFanout
                         if(mainOption == 2):
-                            print " Tests for Jellyfish Topology with Fanout %s" % inputSimpleFanout
+                            print " Tests for JellyfishTopology Topology with Fanout %s" % inputSimpleFanout
                         print "###############################################\n"
                         print "Menu:\n"
                         print " 1 - iPerf Test"
-                        print " 2 - Go Back\n"
+                        print " 2 - Print all paths"
+                        print " 3 - Go Back\n"
                         inputSimpleTestOption = input('Please enter the desired option: ')
 
-                        if(inputSimpleTestOption == 2):
+                        if(inputSimpleTestOption == 3):
                             simpleTestGoBack = True
 
                         if(inputSimpleTestOption == 1):
@@ -336,6 +337,17 @@ def run():
                             #node2 = raw_input("Please select destination Host (hX): ")
                             testRandomIperf(net, mainOption, inputSimpleFanout)
                             explanationIperf(mainOption)
+
+                        #PRINT ALL PATHS
+                        if(inputSimpleTestOption == 2):
+                            if (createdTopo == False):
+                                cleanup()
+                                if(mainOption == 1):
+                                    net = startFatTreeTopology(inputSimpleFanout)
+                                if(mainOption == 2):
+                                    net = startJellyfishTopology(inputSimpleFanout)
+                                createdTopo = True
+                            printAllPaths(net)
 
 
 if __name__ == '__main__':
