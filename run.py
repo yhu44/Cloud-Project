@@ -230,7 +230,7 @@ def printAllPaths(net):
     os.system('rm flows*')
 
 
-    
+
 #Main Function
 def run():
     cleanup()
@@ -307,17 +307,14 @@ def run():
                         if(mainOption == 1):
                             print " Tests for Fat Tree Topology with Fanout %s" % inputSimpleFanout
                         if(mainOption == 2):
-                            print " Tests for JellyfishTopology Topology with Fanout %s" % inputSimpleFanout
+                            print " Tests for Jellyfish Topology with Fanout %s" % inputSimpleFanout
                         print "###############################################\n"
                         print "Menu:\n"
                         print " 1 - iPerf Test"
-                        print " 2 - Ping Test"
-                        print " 3 - Ping 10% Loss"
-                        print " 4 - Print all paths"
-                        print " 5 - Go Back\n"
+                        print " 2 - Go Back\n"
                         inputSimpleTestOption = input('Please enter the desired option: ')
 
-                        if(inputSimpleTestOption == 5):
+                        if(inputSimpleTestOption == 2):
                             simpleTestGoBack = True
 
                         if(inputSimpleTestOption == 1):
@@ -339,65 +336,6 @@ def run():
                             #node2 = raw_input("Please select destination Host (hX): ")
                             testRandomIperf(net, mainOption, inputSimpleFanout)
                             explanationIperf(mainOption)
-
-                        if(inputSimpleTestOption == 2):
-
-                            print "\n###############################################"
-                            print "############# Running Ping Test ###############"
-                            print "###############################################\n"
-
-                            if (createdTopoPing == False):
-                                cleanup()
-                                linkopts1 = {'delay': "1ms"}
-                                linkopts2 = {'delay': "2ms"}
-                                linkopts3 = {'delay': "5ms"}
-
-                                if(mainOption == 1):
-                                    net = startFatTreeTopology(inputSimpleFanout, linkopts1,linkopts2,linkopts3)
-                                if(mainOption == 2):
-                                    net = startJellyfishTopology(inputSimpleFanout, linkopts1,linkopts2, linkopts3)
-                                createdTopoPing = True
-                            createdTopo = False
-                            createdTopoPingLoss = False
-
-                            node1 = raw_input("\nPlease select a source Host (hX): ")
-                            node2 = raw_input("Please select destination Host (hX): ")
-                            testPing(net,node1,node2)
-                            explanationPing(net,node1,node2,linkopts1,linkopts2,linkopts3)
-
-                        if(inputSimpleTestOption == 3):
-                            print "\n#############################################"
-                            print "############# Running Ping Loss Test #########"
-                            print "##############################################\n"
-                            if (createdTopoPingLoss == False):
-                                cleanup()
-                                linkopts1 = {'loss':10}
-                                linkopts2 = {'loss':10}
-                                linkopts3 = {'loss':10}
-
-                                if(mainOption == 1):
-                                    net = startFatTreeTopology(inputSimpleFanout,linkopts1,linkopts2,linkopts3)
-                                if(mainOption == 2):
-                                    net = startJellyfishTopology(inputSimpleFanout,linkopts1,linkopts2, linkopts3)
-                                createdTopoPingLoss=True
-                            createdTopo = False
-                            createdTopoPing = False
-
-                            node1 = raw_input("\nPlease select a source Host (hX): ")
-                            node2 = raw_input("Please select destination Host (hX): ")
-                            testPing(net,node1,node2)
-                            explanationPingLoss()
-
-                        #PRINT ALL PATHS    
-                        if(inputSimpleTestOption == 4):
-                            if (createdTopo == False):
-                                cleanup()
-                                if(mainOption == 1):
-                                    net = startFatTreeTopology(inputSimpleFanout)
-                                if(mainOption == 2):
-                                    net = startJellyfishTopology(inputSimpleFanout)
-                                createdTopo = True
-                            printAllPaths(net)
 
 
 if __name__ == '__main__':

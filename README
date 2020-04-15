@@ -6,7 +6,7 @@ Then follow the on screen instructions to create the approriate topologies and r
 
 Current topologies:
 
-Fattree --> Creates a standard Fattree topology with desired fannout. (Works best with fannout 8 or less)
+Fattree --> Creates a standard Fattree topology with desired fanout. (Works best with fanout 8 or less)
 Jellyfish --> Creates a random Jellfish topology with desired number of ports per switch.
 
 Note: A Fattree with the same fan-out as a Jelly will contain the same number of switches and hosts
@@ -20,15 +20,15 @@ The following tests are available:
  Ping Test --> Gives ping information from one host to another
  Print All Paths --> Prints all of the switches that a packet hits from one host to another from a pingall
 
-To access the Jupyter Notebook of our test results:
-
-   http://35.230.174.87:8888/
-
-Access Token:
-
-   49394293f4944ce6049defb6b9117bafb22647edb6672bf0
+To run Jupyter notebook:
+- go "jupyter" directory
+- run ""~/.local/bin/jupyter-notebook data-analysis.ipynb --ip=0.0.0.0"
+- go to http:<VM external IP address>:8888 (the external IP address is found in the GCP console next to the instance you are using)
+- password/access token is "cloud"
 
 If there are any issues, email anyone on the team!
+
+If all else fails, please try running run.py again!
 
 Julian White (jwhit129@jhu.edu)
 Yidong Hu (yhu44@jhu.edu)
