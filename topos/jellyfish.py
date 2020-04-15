@@ -67,7 +67,6 @@ class JellyfishTopology(Topo):
         if switchesLeft > 0:
             for i in range(self.nSwitches):
                 while openPorts[i] > 1:
-                    while True:
                         rLink = random.sample(links, 1)
                         if (i, rLink[0][0]) in links:
                             continue
