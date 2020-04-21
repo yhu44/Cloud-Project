@@ -130,6 +130,44 @@ def testRandomIperf(net, option, fanout):
     for host in net.hosts:
         host.cmdPrint('killall -9 iperf')
 
+#delete links for testing fault resiliency
+def delLinks(net):
+    print("deleting links")
+    numDelLinks = 2
+    links = net.links
+    allSwitches = None
+    finDelLinks = []
+    while(True):
+        delLinks = random.sample(links, numDelLinks)
+        for link in delLinks:
+            src = str(link.intf1)
+            dst = str(link.intf2)
+            print(src[0])
+            print(dst[0]) 
+            if(src[0] != 's' or dst[0] != 's'):
+                allSwitches = False
+                break
+            else:
+                allSwitches = True 
+        if(allSwitches):
+            for link in delLinks:
+                finDelLinks.append(str(link)) 
+                net.delLink(link)
+            break
+    return finDelLinks
+
+#add deleted links back into the topology
+def addLinks(net, delLinks):
+    print("Adding back deleted links")
+    for link in delLinks:
+        linkStrSplit = link.split("-")
+        nodeStr1 = linkStrSplit[0]
+        nodeStr2 = linkStrSplit[2]
+        nodeStr2 = nodeStr2[1:]
+        print(nodeStr1, nodeStr2) 
+        node1 = net.get(nodeStr1)
+        node2 = net.get(nodeStr2)
+        net.addLink(node1, node2)
 def testIperf(net,hostSrc,hostDst):
     nodeHostSrc, nodeHostDst= net.get(hostSrc,hostDst)
     print "\n\n###########################"
@@ -311,11 +349,12 @@ def run():
                         print "###############################################\n"
                         print "Menu:\n"
                         print " 1 - iPerf Test"
-                        print " 2 - Print all paths"
-                        print " 3 - Go Back\n"
+                        print " 2 - iPerf Test w/ deleted Links"
+                        print " 3 - Print all paths"
+                        print " 4 - Go Back\n"
                         inputSimpleTestOption = input('Please enter the desired option: ')
 
-                        if(inputSimpleTestOption == 3):
+                        if(inputSimpleTestOption == 4):
                             simpleTestGoBack = True
 
                         if(inputSimpleTestOption == 1):
@@ -338,8 +377,29 @@ def run():
                             testRandomIperf(net, mainOption, inputSimpleFanout)
                             explanationIperf(mainOption)
 
-                        #PRINT ALL PATHS
                         if(inputSimpleTestOption == 2):
+
+                            print "\n##############################################"
+                            print "############# Running iPerf Test with deleted Links##############"
+                            print "###############################################\n"
+                            if (createdTopo == False):
+                                if(mainOption == 1):
+                                    net = startFatTreeTopology(inputSimpleFanout)
+                                if(mainOption == 2):
+                                    net = startJellyfishTopology(inputSimpleFanout)
+                                createdTopo = True
+
+                            createdTopoPing = False
+                            createTopoPingLoss = False
+
+                            #node1 = raw_input("\nPlease select a source Host (hX): ")
+                            #node2 = raw_input("Please select destination Host (hX): ")
+                            deletedLinks = delLinks(net)
+                            testRandomIperf(net, mainOption, inputSimpleFanout)
+                            addLinks(net, deletedLinks)
+                            explanationIperf(mainOption)
+                        #PRINT ALL PATHS
+                        if(inputSimpleTestOption == 3):
                             if (createdTopo == False):
                                 cleanup()
                                 if(mainOption == 1):
