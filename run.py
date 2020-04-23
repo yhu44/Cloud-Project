@@ -88,7 +88,7 @@ def getPathAndDelayBetweenHosts(net, hostSrc,hostDst):
 
 # iPerf Test
 
-def testRandomIperf(net, option, fanout):
+def testRandomIperf(net, option, testOption, fanout):
     print("starting random iperf test")
     port_min = 1025
     port_max = 65536
@@ -103,13 +103,19 @@ def testRandomIperf(net, option, fanout):
 
 	#set up server
         topo = "fattree"
+        test = None
         if option == 2:
             topo = "jellyfish"
+        
+        if testOption == 1:
+            test = "randIperf/" 
+        if testOption == 2:
+            test = "randIperfDelLinks/"
 
         server_cmd = "iperf -s -p "
         server_cmd += port
         server_cmd += " -i 1"
-        server_cmd += " > " + topo +"-logs/" + "fanout-" + str(fanout) + "/flow%003d" % host + ".txt 2>&1"
+        server_cmd += " > " + topo +"-logs/" + test +"fanout-" + str(fanout) + "/flow%003d" % host + ".txt 2>&1"
         server_cmd += " & "
 
         client_cmd = "iperf -c "
@@ -374,7 +380,7 @@ def run():
 
                             #node1 = raw_input("\nPlease select a source Host (hX): ")
                             #node2 = raw_input("Please select destination Host (hX): ")
-                            testRandomIperf(net, mainOption, inputSimpleFanout)
+                            testRandomIperf(net, mainOption, inputSimpleTestOption, inputSimpleFanout)
                             explanationIperf(mainOption)
 
                         if(inputSimpleTestOption == 2):
@@ -395,7 +401,7 @@ def run():
                             #node1 = raw_input("\nPlease select a source Host (hX): ")
                             #node2 = raw_input("Please select destination Host (hX): ")
                             deletedLinks = delLinks(net)
-                            testRandomIperf(net, mainOption, inputSimpleFanout)
+                            testRandomIperf(net, mainOption, inputSimpleTestOption, inputSimpleFanout)
                             addLinks(net, deletedLinks)
                             explanationIperf(mainOption)
                         #PRINT ALL PATHS
