@@ -240,7 +240,7 @@ def testPing(net,node1,node2):
             print line,
 
 
-def printAllPaths(net):
+def printAllPaths(net, option, fanout):
     net.pingAll()
     time.sleep(2)
     allPaths = set()
@@ -258,17 +258,37 @@ def printAllPaths(net):
             for i in range(1, len(net.switches)+1):
                 f = open('flows_{}.txt'.format('s' + str(i)))
                 entries = f.readlines()
+                switch = 's' + str(i)
                 for e in entries:
                     if (e.find('nw_src={},'.format(src)) != -1 and e.find('nw_dst={},'.format(dst)) != -1 and e.find('icmp_type=0') != -1):
                         switches += "s" + str(i) + " "
-                        if switches not in numSwitchHits:
-                            numSwitchHits[switches] = 1
+                        if switch not in numSwitchHits:
+                            numSwitchHits[switch] = 1
                         else:
-                            numSwitchHits[switches] += 1
+                            numSwitchHits[switch] += 1
             print(src + "-->" + dst)
             print(switches)
             allPaths.add(switches)
-
+    f_name = ""
+    if option == 1:
+        f_name += 'fattree-logs/'
+    else:
+        f_name += 'jellyfish-logs/'
+    f_name += 'pathDiversity/'
+    f_name += 'fanout-{}.txt'.format(fanout)
+    
+    f = open(f_name, "w")
+    while len(numSwitchHits) > 0:
+        m = -1
+        maxSwitch = ''
+        for switch in numSwitchHits:
+            if numSwitchHits[switch] > m:
+                m = numSwitchHits[switch]
+                maxSwitch = switch
+        f.write(maxSwitch + " " + str(m) + '\n')
+        del numSwitchHits[maxSwitch]
+    
+    f.close()
     print("Total number of unique paths: " + str(len(allPaths)))
     print(numSwitchHits)
     os.system('rm flows*')
@@ -413,7 +433,7 @@ def run():
                                 if(mainOption == 2):
                                     net = startJellyfishTopology(inputSimpleFanout)
                                 createdTopo = True
-                            printAllPaths(net)
+                            printAllPaths(net, mainOption, inputSimpleFanout)
 
 
 if __name__ == '__main__':
