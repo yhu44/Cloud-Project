@@ -242,30 +242,30 @@ def testPing(net,node1,node2):
 
 def printAllPaths(net, option, fanout):
     net.pingAll()
-    time.sleep(2)
     allPaths = set()
     numSwitchHits = {}
     for switch in net.switches:
         os.system('sudo ovs-ofctl dump-flows {} > flows_{}.txt'.format(switch, switch))
+        #os.system('sudo ovs-ofctl dump-flows {}'.format(switch))
 
-    for sr in range(1, len(net.hosts)):
-        for ds in range(1, len(net.hosts)):
+    for sr in range(1, len(net.hosts)+1):
+        for ds in range(1, len(net.hosts)+1):
             if (sr == ds):
                 continue
             switches = ''
             src = '10.0.0.' + str(sr)
-            dst = '10.0.0.' + str(ds)
+            dst = '10.0.0.' + str(ds)   
             for i in range(1, len(net.switches)+1):
                 f = open('flows_{}.txt'.format('s' + str(i)))
-                entries = f.readlines()
                 switch = 's' + str(i)
-                for e in entries:
-                    if (e.find('nw_src={},'.format(src)) != -1 and e.find('nw_dst={},'.format(dst)) != -1 and e.find('icmp_type=0') != -1):
+                for e in f.readlines():
+                    if ('nw_src={},'.format(src) in e and 'nw_dst={},'.format(dst) in e and 'icmp_type=0' in e):
                         switches += "s" + str(i) + " "
                         if switch not in numSwitchHits:
                             numSwitchHits[switch] = 1
                         else:
                             numSwitchHits[switch] += 1
+                f.close()
             print(src + "-->" + dst)
             print(switches)
             allPaths.add(switches)
@@ -290,9 +290,7 @@ def printAllPaths(net, option, fanout):
     
     f.close()
     print("Total number of unique paths: " + str(len(allPaths)))
-    print(numSwitchHits)
-    os.system('rm flows*')
-
+    os.system("sudo rm flows*")
 
 
 #Main Function
