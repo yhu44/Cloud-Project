@@ -140,10 +140,12 @@ def testRandomIperf(net, option, testOption, fanout):
 def delLinks(net):
     links = net.links
     numDelLinks = (len(links) - len(net.hosts)) / 20
-    print("deleting ", numDelLinks, " links")
+    print("deleting " + str(numDelLinks) + " links")
     allSwitches = None
     finDelLinks = []
     while(True):
+        if numDelLinks == 0:
+            break
         delLinks = random.sample(links, numDelLinks)
         for link in delLinks:
             src = str(link.intf1)
