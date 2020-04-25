@@ -241,20 +241,17 @@ def testPing(net,node1,node2):
 
 
 def printAllPaths(net, option, fanout):
-    net.pingAll()
     allPaths = set()
     numSwitchHits = {}
-    for switch in net.switches:
-        os.system('sudo ovs-ofctl dump-flows {} > flows_{}.txt'.format(switch, switch))
-        #os.system('sudo ovs-ofctl dump-flows {}'.format(switch))
-
-    for sr in range(1, len(net.hosts)+1):
-        for ds in range(1, len(net.hosts)+1):
-            if (sr == ds):
-                continue
-            switches = ''
-            src = '10.0.0.' + str(sr)
-            dst = '10.0.0.' + str(ds)   
+    for i in range(len(net.hosts)):
+        for j in range(i+1, len(net.hosts)):
+            net.ping(hosts=[net.hosts[i], net.hosts[j]], timeout=".01")
+        for switch in net.switches:
+            os.system('sudo ovs-ofctl dump-flows {} > flows_{}.txt'.format(switch, switch))
+        src = net.hosts[i].IP()
+        for j in range (i + 1, len(net.hosts)):
+            dst = net.hosts[j].IP()
+            switches = ""
             for i in range(1, len(net.switches)+1):
                 f = open('flows_{}.txt'.format('s' + str(i)))
                 switch = 's' + str(i)
