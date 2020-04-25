@@ -110,7 +110,7 @@ def testRandomIperf(net, option, testOption, fanout):
         if testOption == 1:
             test = "randIperf/" 
         if testOption == 2:
-            test = "randIperfDelLinks/"
+            test = "rand10%/"
 
         server_cmd = "iperf -s -p "
         server_cmd += port
@@ -131,16 +131,16 @@ def testRandomIperf(net, option, testOption, fanout):
         dst.cmdPrint(server_cmd)
         src.cmdPrint(client_cmd)
 
-    time.sleep(60)
+    time.sleep(120)
     #kill iperf in all hosts
     for host in net.hosts:
         host.cmdPrint('killall -9 iperf')
 
 #delete links for testing fault resiliency
 def delLinks(net):
-    print("deleting links")
-    numDelLinks = 2
     links = net.links
+    numDelLinks = (len(links) - len(net.hosts)) / 20
+    print("deleting ", numDelLinks, " links")
     allSwitches = None
     finDelLinks = []
     while(True):

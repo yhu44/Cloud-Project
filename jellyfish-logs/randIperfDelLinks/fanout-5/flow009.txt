@@ -1,4 +1,4 @@
 ------------------------------------------------------------
-Server listening on TCP port 46035
+Server listening on TCP port 8583
 TCP window size: 85.3 KByte (default)
 ------------------------------------------------------------
