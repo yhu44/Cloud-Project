@@ -1,0 +1,35 @@
+------------------------------------------------------------
+Server listening on TCP port 7442
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  4] local 10.0.0.13 port 7442 connected with 10.0.0.6 port 40070
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0- 1.0 sec   217 MBytes  1.82 Gbits/sec
+[  4]  1.0- 2.0 sec   222 MBytes  1.86 Gbits/sec
+[  4]  2.0- 3.0 sec   215 MBytes  1.81 Gbits/sec
+[  4]  3.0- 4.0 sec   210 MBytes  1.76 Gbits/sec
+[  4]  4.0- 5.0 sec   200 MBytes  1.68 Gbits/sec
+[  4]  5.0- 6.0 sec   195 MBytes  1.64 Gbits/sec
+[  4]  6.0- 7.0 sec   222 MBytes  1.86 Gbits/sec
+[  4]  7.0- 8.0 sec   219 MBytes  1.84 Gbits/sec
+[  4]  8.0- 9.0 sec   201 MBytes  1.69 Gbits/sec
+[  4]  9.0-10.0 sec   194 MBytes  1.63 Gbits/sec
+[  4] 10.0-11.0 sec   204 MBytes  1.71 Gbits/sec
+[  4] 11.0-12.0 sec   199 MBytes  1.67 Gbits/sec
+[  4] 12.0-13.0 sec   199 MBytes  1.67 Gbits/sec
+[  4] 13.0-14.0 sec   191 MBytes  1.60 Gbits/sec
+[  4] 14.0-15.0 sec   188 MBytes  1.58 Gbits/sec
+[  4] 15.0-16.0 sec   187 MBytes  1.57 Gbits/sec
+[  4] 16.0-17.0 sec   201 MBytes  1.68 Gbits/sec
+[  4] 17.0-18.0 sec   190 MBytes  1.59 Gbits/sec
+[  4] 18.0-19.0 sec   198 MBytes  1.66 Gbits/sec
+[  4] 19.0-20.0 sec   182 MBytes  1.53 Gbits/sec
+[  4] 20.0-21.0 sec   195 MBytes  1.64 Gbits/sec
+[  4] 21.0-22.0 sec   197 MBytes  1.65 Gbits/sec
+[  4] 22.0-23.0 sec   191 MBytes  1.60 Gbits/sec
+[  4] 23.0-24.0 sec   196 MBytes  1.64 Gbits/sec
+[  4] 24.0-25.0 sec   183 MBytes  1.53 Gbits/sec
+[  4] 25.0-26.0 sec   198 MBytes  1.67 Gbits/sec
+[  4] 26.0-27.0 sec   202 MBytes  1.69 Gbits/sec
+[  4] 27.0-28.0 sec   196 MBytes  1.64 Gbits/sec
+[  4] 28.0-29.0 sec   205 MBytes  1.72 Gbits/sec
