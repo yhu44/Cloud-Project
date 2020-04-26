@@ -13,8 +13,8 @@ class JellyfishTopology(Topo):
 
     def __init__(self, linkopts1,linkopts2,linkopts3,p=2, **opts):
         super(JellyfishTopology, self).__init__()
-        self.nServers = int((p**2)*(2**(math.log(p,2)-2)))
-        self.nSwitches = ((p/2)**2 + p**2)
+        self.nSwitches = int(p/2)**2 + p*(int(p/2)*2)
+        self.nServers = p*(int(p/2)**2)
         self.nPorts = int(math.pow(2, math.ceil(math.log(p,2))))
         self.create_topology()
 
