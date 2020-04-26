@@ -243,6 +243,8 @@ def testPing(net,node1,node2):
 def printAllPaths(net, option, fanout):
     allPaths = set()
     numSwitchHits = {}
+    for switch in net.switches:
+        os.system("sudo ovs-ofctl -O OpenFlow13 del-flows {}".format(switch))
     for i in range(len(net.hosts)):
         for j in range(i+1, len(net.hosts)):
             net.ping(hosts=[net.hosts[i], net.hosts[j]], timeout=".01")
