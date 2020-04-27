@@ -250,6 +250,8 @@ def testPing(net,node1,node2):
 def printAllPaths(net, option, fanout):
     allPaths = set()
     numSwitchHits = {}
+    totalHits = 0
+    numPaths = 0
     for switch in net.switches:
         os.system("sudo ovs-ofctl -O OpenFlow13 del-flows {}".format(switch))
     for i in range(len(net.hosts)):
@@ -274,6 +276,9 @@ def printAllPaths(net, option, fanout):
                 f.close()
             print(src + "-->" + dst)
             print(switches)
+            totalHits += len(switches.split(" "))
+            print(len(switches.split(" ")))
+            numPaths += 1;
             allPaths.add(switches)
     f_name = ""
     if option == 1:
@@ -297,6 +302,7 @@ def printAllPaths(net, option, fanout):
     f.close()
     print("Total number of unique paths: " + str(len(allPaths)))
     os.system("sudo rm flows*")
+    print("Average path length:" + str(int(totalHits/numPaths)))
 
 
 #Main Function
