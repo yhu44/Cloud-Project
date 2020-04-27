@@ -112,7 +112,7 @@ def testRandomIperf(net, option, testOption, fanout):
         if testOption == 2:
             test = "rand2Links/"
         if testOption == 3:
-            test = "rand5%"
+            test = "rand5%/"
         server_cmd = "iperf -s -p "
         server_cmd += port
         server_cmd += " -i 1"
@@ -436,7 +436,7 @@ def run():
                             addLinks(net, deletedLinks)
                             explanationIperf(mainOption)
                         
-                        if(inputSimpleTestOption == 2):
+                        if(inputSimpleTestOption == 3):
 
                             print "\n##############################################"
                             print "############# Running iPerf Test with 5% deleted Links##############"
