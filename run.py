@@ -388,10 +388,11 @@ def run():
                         print " 2 - iPerf Test w/ 2 deleted Links"
                         print " 3 - iPerf Test w/ 5% deleted Links"
                         print " 4 - Print all paths"
-                        print " 5 - Go Back\n"
+                        print " 5 - Print all paths with deleted Links"
+                        print " 6 - Go Back\n"
                         inputSimpleTestOption = input('Please enter the desired option: ')
 
-                        if(inputSimpleTestOption == 5):
+                        if(inputSimpleTestOption == 6):
                             simpleTestGoBack = True
 
                         if(inputSimpleTestOption == 1):
@@ -468,6 +469,17 @@ def run():
                                 createdTopo = True
                             printAllPaths(net, mainOption, inputSimpleFanout)
 
+                        if (inputSimpleTestOption == 5):
+                            if (createdTopo == False):
+                                cleanup()
+                                if (mainOption == 1):
+                                    net = startFatTreeTopology(inputSimpleFanout)
+                                if (mainOption == 2):
+                                    net = startJellyfishTopology(inputSimpleFanout)
+                                createdTopo = True
+                            deletedLinks = delLinks(net, 3)
+                            printAllPaths(net, mainOption, inputSimpleFanout)
+                            addLinks(net, deletedLinks)
 
 if __name__ == '__main__':
     # Tell mininet to print useful information
